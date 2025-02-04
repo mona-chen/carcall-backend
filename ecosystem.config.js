@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "gmela",
+      name: "carcall",
       script: "main.ts",
       interpreter: "npx",
       interpreter_args: "ts-node",
