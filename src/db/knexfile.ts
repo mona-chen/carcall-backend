@@ -4,21 +4,14 @@ import PostgisPlugin from "knex-postgis";
 
 const Deno = {
   env: {
-    get: (e: string) => {
-      return process.env[e];
-    },
+    get: (e: string) => process.env[e],
   },
 };
-export const production = {
+
+// Common database configuration options
+const commonConfig = {
   client: "pg",
   useNullAsDefault: true,
-  connection: {
-    host: Deno.env.get("DB_HOST"),
-    port: parseInt(Deno.env.get("DB_PORT") ?? ""),
-    user: Deno.env.get("DB_USER"),
-    password: Deno.env.get("DB_PASSWORD"),
-    database: Deno.env.get("DB_DATABASE"),
-  },
   pool: {
     max: 50,
     min: 2,
@@ -33,51 +26,34 @@ export const production = {
     directory: "./database/seeds",
   },
   plugins: [PostgisPlugin],
+};
+
+// Function to return either a DATABASE_URL-based connection or a config object
+const getConnectionConfig = (envPrefix: string) => {
+  return process.env.DATABASE_URL
+    ? process.env.DATABASE_URL
+    : {
+        host: Deno.env.get(`${envPrefix}_HOST`),
+        port: parseInt(Deno.env.get(`${envPrefix}_PORT`) ?? "5432"),
+        user: Deno.env.get(`${envPrefix}_USER`),
+        password: Deno.env.get(`${envPrefix}_PASSWORD`),
+        database: Deno.env.get(`${envPrefix}_DATABASE`),
+      };
+};
+
+export const production = {
+  ...commonConfig,
+  connection: getConnectionConfig("DB"),
 };
 
 export const testing = {
-  client: "pg",
-  connection: {
-    host: Deno.env.get("POSTGRES_TEST_HOST"),
-    port: parseInt(Deno.env.get("POSTGRES_TEST_PORT") ?? ""),
-    user: Deno.env.get("POSTGRES_TEST_USER"),
-    password: Deno.env.get("POSTGRES_TEST_PASSWORD"),
-    database: Deno.env.get("POSTGRES_TEST_DATABASE"),
-  },
-  useNullAsDefault: true,
-  migrations: {
-    directory: "./database/migrations",
-  },
-  seeds: {
-    directory: "./database/seeds",
-  },
-  plugins: [PostgisPlugin],
+  ...commonConfig,
+  connection: getConnectionConfig("POSTGRES_TEST"),
 };
 
 export const development = {
-  client: "pg",
-  useNullAsDefault: true,
-  connection: {
-    host: Deno.env.get("DB_HOST"),
-    port: parseInt(Deno.env.get("DB_PORT") ?? ""),
-    user: Deno.env.get("DB_USER"),
-    password: Deno.env.get("DB_PASSWORD"),
-    database: Deno.env.get("DB_DATABASE"),
-  },
-  pool: {
-    max: 50,
-    min: 2,
-    reapIntervalMillis: 1000,
-    acquireTimeoutMillis: 30000,
-    idleTimeoutMillis: 600000,
-  },
-  migrations: {
-    directory: "./database/migrations",
-  },
-  plugins: [PostgisPlugin],
-  seeds: {
-    directory: "./database/seeds",
-  },
+  ...commonConfig,
+  connection: getConnectionConfig("DB"),
 };
 
 const knexConfig = {

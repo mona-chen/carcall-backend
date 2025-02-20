@@ -13,7 +13,7 @@ const initModules = (app: AppInstance) => {
   // continue with da rest
   userModule.init(app);
   // Initialize Passport
-  app.use(passport.initialize());
+  // app.use(passport.initialize());
   app.use(globalErrorHandler);
 };
 

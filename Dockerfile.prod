@@ -1,0 +1,22 @@
+# Use Bun's official image instead of Node
+FROM oven/bun:1.2.2-alpine
+
+RUN addgroup app && adduser -S -G app app
+WORKDIR /app
+
+# Copy only package files first (for caching)
+COPY package.json bun.lockb ./
+
+# Install dependencies with Bun
+RUN bun install
+
+# Copy the rest of the code
+COPY . .
+
+# Set Bun as the default package manager
+ENV PATH="/root/.bun/bin:$PATH"
+
+EXPOSE 6555
+
+# Run your app with Bun
+CMD ["bun", "main.ts"]

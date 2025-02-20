@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  carcall-app:
+    environment:
+      - NODE_ENV=development
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    container_name: carcall-app
+    ports:
+      - '6555:6555'
+    command: npm run dev
+    restart: on-failure

@@ -1,5 +1,5 @@
 import Knex from "knex";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { Model, ModelObject } from "objection";
 import { IUser } from "types/__models__/user";
 import crypto from "crypto";

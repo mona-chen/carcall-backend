@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  carcall-app:
+    environment:
+      - NODE_ENV=production
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - '6555:6555'
+    command: bun main.ts

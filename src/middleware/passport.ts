@@ -39,7 +39,7 @@ passport.use(
 
 passport.serializeUser((user: any, done) => {
   done(null, user.id);
-});
+}); 
 
 passport.deserializeUser(async (id: number, done) => {
   try {
@@ -47,5 +47,5 @@ passport.deserializeUser(async (id: number, done) => {
     done(null, user);
   } catch (err) {
     done(err, null);
-  }
+  } 
 });
