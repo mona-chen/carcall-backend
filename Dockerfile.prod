@@ -13,6 +13,9 @@ RUN bun install
 # Copy the rest of the code
 COPY . .
 
+# Copy environment file
+COPY .env.prod .env
+
 # Set Bun as the default package manager
 ENV PATH="/root/.bun/bin:$PATH"
 
