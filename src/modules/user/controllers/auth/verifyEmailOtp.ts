@@ -10,6 +10,7 @@ const verifyEmailOtp = catchAsync(async (req: IReq, res: IRes) => {
     const redis = RedisSingleton.getInstance();
     const validator = new Validator();
 
+
     // Validate request body
     validator.validate(req.body)
         .require("email")

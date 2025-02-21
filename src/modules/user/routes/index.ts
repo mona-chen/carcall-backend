@@ -13,7 +13,7 @@ authRouter.get("/logout", userController.logout);
 
 authRouter.post("/forgotPassword", userController.forgotPassword);
 authRouter.post("/send-email-otp", userController.sendEmailOtp);
-authRouter.post("/verify-email-otp", userController.sendEmailOtp);
+authRouter.post("/verify-email-otp", userController.verifyEmailOtp);
 authRouter.patch("/resetPassword/:token", userController.resetPassword); 
 
 // passcode signin
@@ -36,17 +36,17 @@ userRouter.patch(
 userRouter.delete("/deleteMe", userController.deleteMe);
 
 // restrict all route after this middleware to admin
-userRouter.use(restrictTo("admin"));
+// userRouter.use(restrictTo("admin"));
 
-userRouter
-  .route("/")
-  .get(userController.getAllUsers)
-  .post(userController.createUser);
+// userRouter
+//   .route("/")
+//   .get(userController.getAllUsers)
+//   .post(userController.createUser);
 
-userRouter
-  .route("/:id")
-  .get(userController.getUser)
-  .patch(userController.updateUser)
-  .delete(userController.deleteUser);
+// userRouter
+//   .route("/:id")
+//   .get(userController.getUser)
+//   .patch(userController.updateUser)
+//   .delete(userController.deleteUser);
 
 export  {userRouter, authRouter};
