@@ -1,9 +1,7 @@
 import { factory } from "@helpers/handlerFactory";
 import { fail, success } from "@helpers/request";
 import QrCode from "@models/qrcode.model";
-import User from "@models/user.model";
 import { Request, Response } from "express";
-import { IReq } from "types/config";
 import createQRCode from "./createQr";
 
 class QRCodeController {

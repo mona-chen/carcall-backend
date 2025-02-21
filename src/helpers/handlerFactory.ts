@@ -91,7 +91,7 @@ export const getAll = <M extends Model>(
     let query: any = Model.query();
 
     if (options?.$before) {
-      query = options.$before(query, req.query);
+      query = options.$before(query, req);
     }
     // To allow for nested GET reviews on tour (hack)
     if (req.params.tourId) {

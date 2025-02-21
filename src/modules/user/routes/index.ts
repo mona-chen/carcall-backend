@@ -1,6 +1,7 @@
 import { Application, Router } from "express";
 import userController from "../controllers";
 import { protect, restrictTo } from "../../../guard/restrictTo";
+import QRCodeController from "@modules/qr/controllers";
 // import userController from "../controllers/index";
 
 const userRouter = Router();
@@ -25,6 +26,9 @@ userRouter.use(protect);
 
 userRouter.patch("/updateMyPassword", userController.updatePassword);
 userRouter.get("/me", userController.getMe, userController.getUser);
+
+// Get QR Codes by User
+userRouter.get('/qr-codes', QRCodeController.getUserQRCodes);
 
 userRouter.patch(
   "/updateMe",

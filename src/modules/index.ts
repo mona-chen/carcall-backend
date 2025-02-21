@@ -3,6 +3,7 @@ import globalErrorHandler from "../helpers/errorController";
 import { AppInstance, IReq, IRes } from "../types/config.js";
 import userModule from "./user/index";
 import express from "express";
+import qrModule from "./qr";
 
 const initModules = (app: AppInstance) => {
 
@@ -12,6 +13,7 @@ const initModules = (app: AppInstance) => {
 
   // continue with da rest
   userModule.init(app);
+  qrModule.init(app);
   // Initialize Passport
   // app.use(passport.initialize());
   app.use(globalErrorHandler);

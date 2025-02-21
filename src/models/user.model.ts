@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { Model, ModelObject } from "objection";
 import { IUser } from "types/__models__/user";
 import crypto from "crypto";
+import Plan from "./plan.model";
 class User extends Model implements IUser {
   id!: number;
   name!: string;
@@ -17,6 +18,11 @@ class User extends Model implements IUser {
   active!: boolean;
   passcode?: string | number | null;
   google_id?: string;
+  emergency_contacts?: object;
+  address?: object;
+  plan_id?: number;
+  is_vendor!: boolean;
+  plan?: Plan;
 
   static get tableName(): string {
     return "users";
@@ -49,6 +55,16 @@ class User extends Model implements IUser {
     };
   }
 
+   static relationMappings = {
+      plan: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Plan,
+        join: {
+          from: 'users.plan_id',
+          to: 'plans.id',
+        },
+      },
+    };
   static get modifiers() {
     return {
       selectBasicInfo(builder: any) {
@@ -71,9 +87,11 @@ class User extends Model implements IUser {
     ) {
       throw new Error("Passwords do not match");
     } else {
-      this.passwordChangedAt = new Date();
-      await this._hashPassword();
-      delete this.passwordConfirm;
+      if(this.password && this.passwordConfirm){
+        this.passwordChangedAt = new Date();
+        await this._hashPassword();
+        delete this.passwordConfirm;
+      }
     }
   }
 
