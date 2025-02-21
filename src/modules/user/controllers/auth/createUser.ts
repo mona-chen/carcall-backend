@@ -1,12 +1,10 @@
-import { fail, success } from "../../../../helpers/request";
 import User from "../../../../models/user.model";
 import { IReq, IRes } from "../../../../types/config.js";
 import Validation from "../../../../utils/validation";
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
-
+import RedisSingleton from "../../../../utils/redis";
 import Email from "../../../../utils/email";
-
 import { IUser } from "types/__models__/user";
 import catchAsync from "../../../../utils/catchAsync";
 import { transaction } from "objection";
@@ -48,6 +46,8 @@ export const createSendToken = (
 };
 
 const registerUser = catchAsync(async (req: IReq, res: IRes) => {
+  const redis = RedisSingleton.getInstance();
+
   await transaction(User.knex(), async (trx) => {
     const validator = new Validation();
 
@@ -55,12 +55,26 @@ const registerUser = catchAsync(async (req: IReq, res: IRes) => {
       .validate(req.body)
       .require("name")
       .email("email")
+      .require("otp") // Ensure OTP is required
       .require("password")
       .password("password")
       .password("confirmPassword")
       .end();
 
-    const { name, email, password, confirmPassword } = req.body;
+    const { name, email, otp, password, confirmPassword } = req.body;
+
+    const otpKey = `${email}-registration-otp`;
+
+    // Retrieve stored OTP from Redis
+    const storedOtp = await redis.get(otpKey);
+
+    if (!storedOtp) {
+      throw new AppError("OTP has expired or is invalid", 400);
+    }
+
+    if (storedOtp !== otp) {
+      throw new AppError("Invalid OTP", 400);
+    }
 
     // Check if the passwords match
     if (password !== confirmPassword) {
@@ -83,11 +97,14 @@ const registerUser = catchAsync(async (req: IReq, res: IRes) => {
     // Remove password from output
     newUser.password = undefined;
 
+    // Delete OTP from Redis after successful verification
+    await redis.del(otpKey);
+
     // Send welcome email
     const url = `${req.protocol}://${req.get("host")}/me`;
     await new Email(newUser, { url }).sendWelcome();
 
-    // Optionally, you can generate a JWT token and send it back as a response
+    // Generate JWT token and send it back as a response
     createSendToken(newUser, 201, req, res);
   });
 });

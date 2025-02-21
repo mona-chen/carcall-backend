@@ -7,18 +7,20 @@ export default class Email {
   firstName: string;
   url?: string | Object;
   passcode?: string;
+  otpPurpose?: string;
   from: string;
   transporter: Transporter;
 
   constructor(
-    user: IUser,
-    { url, passcode }: { passcode?: string; url?: string | Object }
+    user: Partial<IUser> & {email: Required<IUser['email']>},
+    { url, passcode, otpPurpose }: { passcode?: string; url?: string | Object; otpPurpose?:string }
   ) {
-    this.to = user.email;
-    this.firstName = user?.name.split(" ")[0];
+    this.to = user.email ;
+    this.firstName = user?.name ? user?.name.split(" ")[0] : "Buddy";
     this.url = url;
     this.passcode = passcode;
-    this.from = `Gmela Africa <${process.env.EMAIL_FROM}>`;
+    this.otpPurpose = otpPurpose;
+    this.from = `Carcall <${process.env.EMAIL_FROM}>`;
     this.transporter = this.newTransport();
   }
 
@@ -41,7 +43,10 @@ export default class Email {
       auth: {
         user: process.env.EMAIL_USERNAME || "",
         pass: process.env.EMAIL_PASSWORD || ""
-      }
+      },
+      tls: {
+        rejectUnauthorized: false, // Bypass self-signed certificate errors
+      },
     } as any); // Specify the type as 'any'
   }
 
@@ -52,6 +57,7 @@ export default class Email {
       firstName: this.firstName,
       url: this.url,
       passcode: this.passcode,
+      otpPurpose: this.otpPurpose,
       subject
     });
 
@@ -77,6 +83,10 @@ export default class Email {
       "passwordReset",
       "Your password reset token (valid for only 10 minutes)"
     );
+  }
+
+  async sendEmailOtp(): Promise<void> {
+    await this.send("otpEmail", "Your One Time Password");
   }
 
   async sendBookingSuccesful(): Promise<void> {

@@ -29,9 +29,16 @@
     "types": ["node"],
     "typeRoots": ["./node_modules/@types"],
     "paths": {
-      "@/types/*": ["src/types/*"],
-      "@/utils/*": ["src/utils"],
-      "@/modules/*": ["src/modules/*"]
+      "@modules/*": ["modules/*"],
+      "@models/*": ["models/*"],
+      "@controllers/*": ["controllers/*"],
+      "@middlewares/*": ["middlewares/*"],
+      "@helpers/*": ["helpers/*"],
+      "@utils/*": ["utils/*"],
+      "@guard/*": ["guard/*"],
+      "@views/*": ["views/*"],
+      "@types/*": ["types/*"],
+      "@constants/*": ["constants/*"],
     },
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true

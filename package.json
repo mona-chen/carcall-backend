@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev main.ts",
+    "dev": "ts-node-dev -r tsconfig-paths/register main.ts",
     "prepare-env": "./prepare-env.sh",
     "start": "bun main.ts",
     "build": "tsc"
@@ -14,13 +14,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^5.1.1", 
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "html-to-text": "^9.0.5",
+    "ioredis": "^5.5.0",
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
     "knex-postgis": "^0.14.3",
@@ -33,7 +34,8 @@
     "pg": "^8.11.5",
     "pino": "^9.1.0",
     "sharp": "^0.33.4",
-    "stripe": "^15.8.0"
+    "stripe": "^15.8.0",
+    "tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

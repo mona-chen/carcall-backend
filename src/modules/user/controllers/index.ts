@@ -17,6 +17,8 @@ import {
   uploadUserPhoto
 } from "./user";
 import { generatePasscode, verifyPasscode } from "./auth/passcodeSignin";
+import sendEmailOtp from "./auth/sendEmailOtp";
+import verifyEmailOtp from "./auth/verifyEmailOtp";
 
 const userController = {
   createUser: registerUser,
@@ -28,6 +30,8 @@ const userController = {
   resetPassword,
   updatePassword,
   getUser,
+  sendEmailOtp,
+  verifyEmailOtp,
   getMe: getMe as Application,
 
   uploadUserPhoto,

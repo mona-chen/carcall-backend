@@ -4,30 +4,35 @@ import { protect, restrictTo } from "../../../guard/restrictTo";
 // import userController from "../controllers/index";
 
 const userRouter = Router();
+const authRouter = Router();
 
-userRouter.post("/register", userController.createUser);
-userRouter.post("/login", userController.loginUser);
+authRouter.post("/register", userController.createUser);
+authRouter.post("/login", userController.loginUser);
 
-userRouter.get("/logout", userController.logout);
+authRouter.get("/logout", userController.logout);
 
-userRouter.post("/forgotPassword", userController.forgotPassword);
-userRouter.patch("/resetPassword/:token", userController.resetPassword);
+authRouter.post("/forgotPassword", userController.forgotPassword);
+authRouter.post("/send-email-otp", userController.sendEmailOtp);
+authRouter.post("/verify-email-otp", userController.sendEmailOtp);
+authRouter.patch("/resetPassword/:token", userController.resetPassword); 
 
 // passcode signin
-userRouter.post("/passcode/generate", userController.generatePasscode);
-userRouter.post("/passcode/verify", userController.verifyPasscode);
+authRouter.post("/passcode/generate", userController.generatePasscode);
+authRouter.post("/passcode/verify", userController.verifyPasscode);
 
 // Protect all routes after this middleware
 userRouter.use(protect);
 
 userRouter.patch("/updateMyPassword", userController.updatePassword);
 userRouter.get("/me", userController.getMe, userController.getUser);
+
 userRouter.patch(
   "/updateMe",
   userController.uploadUserPhoto,
   userController.resizeUserPhoto,
   userController.updateMe
 );
+
 userRouter.delete("/deleteMe", userController.deleteMe);
 
 // restrict all route after this middleware to admin
@@ -44,4 +49,4 @@ userRouter
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
 
-export default userRouter;
+export  {userRouter, authRouter};

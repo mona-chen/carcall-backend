@@ -142,3 +142,12 @@ export const getAll = <M extends Model>(
       result: doc
     });
   });
+
+
+export const factory = {
+  getAll,
+  getOne,
+  updateOne,
+  createOne, 
+  deleteOne
+}
